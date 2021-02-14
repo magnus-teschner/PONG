@@ -1,4 +1,6 @@
 import pygame
+import time
+import random
 class Ball:
     def __init__(self, screen, color, posX, posY, radius):
         self.screen = screen
@@ -16,8 +18,10 @@ class Ball:
         pygame.draw.circle(self.screen, self.color, (self.posX, self.posY), self.radius)
 
     def start_moving(self):
-        self.dx = 0.3
-        self.dy = 0.1
+        a = random.randint(0,1)
+        liste = [0.5, -0.5]
+        self.dx = liste[a]
+        self.dy = random.uniform(-0.3, 0.3)
 
     def move(self):
         self.posX += self.dx
@@ -50,11 +54,19 @@ class Paddle:
 
     def draw(self):
         pygame.draw.rect(self.screen, self.color, (self.posX, self.posY, self.width, self.height) )
+
+    def move_on(self, ball):
+        if ball.posY > self.posY - 2 and ball.posX < 450:
+            self.posY += 0.4
+
+        if ball.posY < self.posY + 2 and ball.posX < 450:
+            self.posY -= 0.4
+
     def move(self):
         if self.state == "up":
-            self.posY -= 0.3
+            self.posY -= 0.35
         elif self.state == "down":
-            self.posY += 0.3
+            self.posY += 0.35
     def clamp(self):
         if self.posY <= 0:
             self.posY = 0
@@ -87,9 +99,9 @@ class Collision_Manager:
         return False
 
     def check_goal_player1(self, ball):
-        return ball.posX - ball.radius >= 900
+        return ball.posX - ball.radius >= 855
     def check_goal_player2(self, ball):
-        return ball.posX + ball.radius <= 0
+        return ball.posX + ball.radius <= 30
 
 
 

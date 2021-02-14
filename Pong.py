@@ -26,7 +26,7 @@ def restart():
     score2.restart()
     ball.restart_pos()
     paddle1.restart_pos()
-    paddle.restart_pos()
+    paddle2.restart_pos()
 
 paint_back()
 
@@ -58,12 +58,7 @@ while True:
                 paddle2.state = "up"
             if event.key == pygame.K_DOWN:
                 paddle2.state = "down"
-            if event.key == pygame.K_w:
-                paddle1.state = "up"
-            if event.key == pygame.K_s:
-                paddle1.state = "down"
         if event.type == pygame.KEYUP:
-            paddle1.state = "stopped"
             paddle2.state = "stopped"
 
 
@@ -71,8 +66,8 @@ while True:
         paint_back()
         ball.move()
         ball.draw()
+        paddle1.move_on(ball)
         paddle1.clamp()
-        paddle1.move()
         paddle1.draw()
         paddle2.clamp()
         paddle2.move()
