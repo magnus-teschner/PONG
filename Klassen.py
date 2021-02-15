@@ -12,6 +12,7 @@ class Ball:
         self.dy = 0
         self.dx = 0
         self.dy = 0
+        self.counter = 0
         self.draw()
 
     def draw(self):
@@ -19,9 +20,12 @@ class Ball:
 
     def start_moving(self):
         a = random.randint(0,1)
-        liste = [0.5, -0.5]
+        liste = [0.3, -0.3]
         self.dx = liste[a]
-        self.dy = random.uniform(-0.3, 0.3)
+        x = 0
+        while  -0.1 < x < 0.1:
+            x = random.uniform(-0.33, 0.33)
+        self.dy = x
 
     def move(self):
         self.posX += self.dx
@@ -29,8 +33,21 @@ class Ball:
 
     def wall_collision(self):
         self.dy = -self.dy
-    def paddle_collision(self):
+
+    def paddle_collision(self, counter, counter1, paddle):
+        if self.dx > 0 and counter == 0:
+            self.dx = 0.6
+        elif self.dx < 0 and counter == 0:
+            self.dx = -0.6
         self.dx = -self.dx
+        if self.dx > 0:
+            self.dx += 0.01
+        elif self.dx < 0:
+            self.dx -= 0.01
+        if counter1 != 0:
+            paddle.dy += 0.02
+        print(self.dx)
+
 
     def restart_pos(self):
         self.posX = 450
@@ -50,6 +67,7 @@ class Paddle:
         self.width = width
         self.height = height
         self.state = "stopped"
+        self.dy = 0
         self.draw()
 
     def draw(self):
@@ -57,16 +75,18 @@ class Paddle:
 
     def move_on(self, ball):
         if ball.posY > self.posY - 2 and ball.posX < 450:
-            self.posY += 0.4
+            self.posY += 0.6
 
         if ball.posY < self.posY + 2 and ball.posX < 450:
-            self.posY -= 0.4
+            self.posY -= 0.6
 
     def move(self):
         if self.state == "up":
-            self.posY -= 0.35
+            self.posY -= 0.45 + self.dy
         elif self.state == "down":
-            self.posY += 0.35
+            self.posY += 0.45 + self.dy
+
+        #print(self.dy)
     def clamp(self):
         if self.posY <= 0:
             self.posY = 0
@@ -99,9 +119,11 @@ class Collision_Manager:
         return False
 
     def check_goal_player1(self, ball):
-        return ball.posX - ball.radius >= 855
+        return ball.posX  >= 900
+        #return ball.posX - ball.radius >= 900
     def check_goal_player2(self, ball):
-        return ball.posX + ball.radius <= 30
+        return ball.posX  <= 0
+        #return ball.posX + ball.radius <= 0
 
 
 

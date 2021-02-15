@@ -58,25 +58,50 @@ while True:
                 paddle2.state = "up"
             if event.key == pygame.K_DOWN:
                 paddle2.state = "down"
-        if event.type == pygame.KEYUP:
-            paddle2.state = "stopped"
+            if event.key == pygame.K_w:
+                paddle1.state = "up"
+            if event.key == pygame.K_s:
+                paddle1.state = "down"
+        #if event.type == pygame.KEYUP:
+            #paddle2.state = "stopped"
+            #paddle1.state = "stopped"
+
+
+    if not playing:
+        counter1 = 0
+        counter2 = 0
+        paint_back()
+        paddle1.move()
+        paddle1.clamp()
+        paddle1.draw()
+
+        paddle2.clamp()
+        paddle2.move()
+        paddle2.draw()
+        ball.draw()
+        counter = 0
 
 
     if playing:
         paint_back()
         ball.move()
         ball.draw()
-        paddle1.move_on(ball)
+        paddle1.move()
         paddle1.clamp()
         paddle1.draw()
+
         paddle2.clamp()
         paddle2.move()
         paddle2.draw()
 
         if collision.between_ball_and_paddle1(ball, paddle1):
-            ball.paddle_collision()
+            ball.paddle_collision(counter, counter1, paddle1)
+            counter += 1
+            counter1 += 1
         if collision.between_ball_and_paddle2(ball, paddle2):
-            ball.paddle_collision()
+            ball.paddle_collision(counter, counter2, paddle2)
+            counter += 1
+            counter2 += 1
         if collision.between_ball_and_walls(ball):
             ball.wall_collision()
 
@@ -86,6 +111,9 @@ while True:
             ball.restart_pos()
             paddle1.restart_pos()
             paddle2.restart_pos()
+            paddle1.dy = 0
+            paddle2.dy = 0
+            ball.dx = 0
             playing = False
         if collision.check_goal_player2(ball):
             paint_back()
@@ -93,6 +121,9 @@ while True:
             ball.restart_pos()
             paddle1.restart_pos()
             paddle2.restart_pos()
+            paddle1.dy = 0
+            paddle2.dy = 0
+            ball.dx = 0
             playing = False
 
 
