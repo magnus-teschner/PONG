@@ -1,5 +1,5 @@
 import pygame, sys
-from KLassen import *
+from KLassenlocal import *
 
 pygame.init()
 clock = pygame.time.Clock()
