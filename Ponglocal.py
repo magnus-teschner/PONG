@@ -3,7 +3,7 @@ from KLassenlocal import *
 
 pygame.init()
 clock = pygame.time.Clock()
-clock.tick(60)
+clock.tick(30)
 #Variablen
 width = 900
 height = 500
@@ -22,6 +22,8 @@ def paint_back():
     screen.fill(bg_color)
     pygame.draw.line(screen, white,(width//2, 0), (width//2, height),7 )
 
+
+
 def restart():
     paint_back()
     score1.restart()
@@ -39,14 +41,54 @@ paddle2 = Paddle(screen, light_grey,width - 20 - 15, height//2 - 60, 20,120)
 collision = Collision_Manager()
 score1 = Score(screen, "0", width//4, 15)
 score2 = Score(screen, "0", width - width//4, 15)
+singleplayer = Button(light_grey, 200, 200, 200, 100, "Single Player" )
+multiplayer = Button(light_grey, 500, 200, 200, 100, "Multi Player" )
 #Variables
 playing = False
+singleplayer.state = "visible"
+multiplayer.state = "visible"
+gamemode = ""
+
+
+def two():
+    paint_back()
+    ball.move()
+    ball.draw()
+    paddle1.move()
+    paddle1.clamp()
+    paddle1.draw()
+
+    paddle2.clamp()
+    paddle2.move()
+    paddle2.draw()
+def one():
+    paint_back()
+    ball.move()
+    ball.draw()
+    paddle1.dx = 0
+    paddle1.move_on(ball)
+    paddle1.clamp()
+    paddle1.draw()
+
+    paddle2.clamp()
+    paddle2.move()
+    paddle2.draw()
+
 
 while True:
     for event in pygame.event.get():
+        pos = pygame.mouse.get_pos()
         if event.type == pygame.QUIT:
             sys.exit()
-
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if singleplayer.isOver(pos):
+                gamemode = 0
+                playing = True
+                ball.start_moving()
+            if multiplayer.isOver(pos):
+                gamemode = 1
+                playing = True
+                ball.start_moving()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_p:
                 ball.start_moving()
@@ -55,6 +97,8 @@ while True:
             if event.key == pygame.K_r:
                 restart()
                 playing = False
+                singleplayer.state = "visible"
+                multiplayer.state = "visible"
 
             if event.key == pygame.K_UP:
                 paddle2.state = "up"
@@ -68,35 +112,49 @@ while True:
             #paddle2.state = "stopped"
             #paddle1.state = "stopped"
 
-
     if not playing:
+        paint_back()
+        counter = 0
         counter1 = 0
         counter2 = 0
-        paint_back()
-        paddle1.move()
-        paddle1.clamp()
-        paddle1.draw()
+        if singleplayer.state == "visible" and multiplayer.state == "visible":
+            singleplayer.draw(screen, light_grey)
+            multiplayer.draw(screen, light_grey)
+            paddle1.draw()
+            paddle2.draw()
 
-        paddle2.clamp()
-        paddle2.move()
-        paddle2.draw()
-        ball.move()
-        ball.restart_pos()
-        ball.draw()
-        counter = 0
+        elif multiplayer.state == "unvisible" and singleplayer.state == "unvisible":
+            counter1 = 0
+            counter2 = 0
+            paddle1.move()
+            paddle1.clamp()
+            paddle1.draw()
+
+            paddle2.clamp()
+            paddle2.move()
+            paddle2.draw()
+            ball.move()
+            ball.restart_pos()
+            ball.draw()
+            counter = 0
 
 
     if playing:
-        paint_back()
-        ball.move()
-        ball.draw()
-        paddle1.move()
-        paddle1.clamp()
-        paddle1.draw()
+        singleplayer.state = "unvisible"
+        multiplayer.state = "unvisible"
 
-        paddle2.clamp()
-        paddle2.move()
-        paddle2.draw()
+
+        if gamemode == 0:
+            one()
+
+
+        if gamemode == 1:
+            two()
+            print(paddle1.dy)
+            print(paddle2.dy)
+
+
+
 
         if collision.between_ball_and_paddle1(ball, paddle1):
             ball.paddle_collision(counter, counter1, paddle1)
