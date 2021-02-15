@@ -120,7 +120,7 @@ while True:
                 singleplayer.state = "visible"
                 multiplayer.state = "visible"
 
-        if event.type == pygame.KEYDOWN:
+        '''if event.type == pygame.KEYDOWN:
             #Steuerung der Paddles mit Keys
             if event.key == pygame.K_UP:
                 paddle2.state = "up"
@@ -129,12 +129,22 @@ while True:
             if event.key == pygame.K_w:
                 paddle1.state = "up"
             if event.key == pygame.K_s:
-                paddle1.state = "down"
+                paddle1.state = "down"'''
 
         #Auskommentieren wenn man stockende Bewegung der Paddles will wenn man Taste loslässt
-        #if event.type == pygame.KEYUP:
-            #paddle2.state = "stopped"
-            #paddle1.state = "stopped"
+        if event.type == pygame.KEYUP:
+            paddle2.state = "stopped"
+            paddle1.state = "stopped"
+
+    keys_pressed = pygame.key.get_pressed()
+    if keys_pressed[pygame.K_UP]:
+        paddle2.state = "up"
+    if keys_pressed[pygame.K_DOWN]:
+        paddle2.state = "down"
+    if keys_pressed[pygame.K_w]:
+        paddle1.state = "up"
+    if keys_pressed[pygame.K_s]:
+        paddle1.state = "down"
 
     #Variable playing auf False -> es wird nicht gespielt
     if not playing:

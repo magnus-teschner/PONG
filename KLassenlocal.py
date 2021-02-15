@@ -87,10 +87,10 @@ class Paddle:
 
     #Nachverfolgung Ball, Singleplayer
     def move_on(self, ball):
-        if ball.posY > self.posY - 10 and ball.posX < 500:
+        if ball.posY > self.posY - 10 and ball.posX < 450:
             self.posY += 0.45 + self.dy
 
-        if ball.posY < self.posY + 10 and ball.posX < 500:
+        if ball.posY < self.posY + 10 and ball.posX < 450:
             self.posY -= 0.45 + self.dy
 
     #Moven auf Pfeiltasten
